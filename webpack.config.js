@@ -119,7 +119,8 @@ const config = {
     port: 4000,
     inline: true, //缺少该配置，会出现上面的错误
     historyApiFallback: true //缺少该配置，会出现上面的错误
-  }
+  },
+  stats: 'minimal'
 }
 
 module.exports = config
