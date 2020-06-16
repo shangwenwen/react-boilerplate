@@ -1,5 +1,4 @@
 // 发起登录请求
-
 export function queryUser() {
   return { type: '@users/query' }
 }
