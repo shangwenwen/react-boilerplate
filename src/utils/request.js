@@ -7,23 +7,16 @@ const request = axios.create({
   timeout: 60000
 })
 
-// request.interceptors.response.use(
-//   response => response,
-//   error => {
-//     let status = 0
-//     let message = ''
+// 请求拦截
+request.interceptors.request.use(
+  config => config,
+  error => Promise.reject(error)
+)
 
-//     if (error && error.response && error.response.status) {
-//       status = error.response.status
-//       message = error.response.data.message
-//     }
-
-//     if (status === 401) {
-//       console.log('api error')
-//     }
-
-//     return Promise.reject({ ...error, status, message })
-//   }
-// )
+// 响应拦截
+request.interceptors.response.use(
+  response => response,
+  error => Promise.reject(error)
+)
 
 export default request
