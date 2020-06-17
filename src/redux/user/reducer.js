@@ -1,17 +1,20 @@
 import produce from 'immer'
 
-const INITIAL_STATE = {
-  data: ''
+const initState = {
+  data: '',
+  loading: false
 }
 
-export default function users(state = INITIAL_STATE, action) {
+export default function users(state = initState, action) {
   return produce(state, draft => {
     switch (action.type) {
       case '@users/query': {
+        draft.loading = true
         break
       }
       case '@users/save': {
         draft.data = action.payload
+        draft.loading = false
         break
       }
       default:

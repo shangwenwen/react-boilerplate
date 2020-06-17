@@ -1,8 +1,11 @@
 // 发起登录请求
-export function queryUser() {
-  return { type: '@users/query' }
+export function query(payload) {
+  return {
+    type: '@login/query',
+    payload
+  }
 }
 
-export function saveUser(data) {
-  return { type: '@users/save', payload: data }
-}
+// export function login(data) {
+//   return { type: '@login/save', payload: data }
+// }

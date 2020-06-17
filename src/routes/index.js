@@ -4,7 +4,7 @@ import { Switch, Route } from 'react-router-dom'
 import Dashboard from '../pages/dashboard'
 import Login from '~/pages/user/login'
 import Register from '~/pages/user/register'
-import NoMatch from '~/pages/404'
+// import NoMatch from '~/pages/404'
 
 export default function Routes() {
   return (
@@ -12,7 +12,7 @@ export default function Routes() {
       <Route path='/' exact component={Dashboard} />
       <Route path='/login' exact component={Login} />
       <Route path='/register' exact component={Register} />
-      <Route component={NoMatch} />
+      {/* <Route component={NoMatch} /> */}
     </Switch>
   )
 }
