@@ -14,5 +14,5 @@ app.use(mockMiddleware(path.join(__dirname, './mock')))
 
 var port = process.env.PORT || 3000
 app.listen(port, () => {
-  console.log(`> Ready on http://localhost:${port}`)
+  console.log(`>> Ready on http://localhost:${port}`)
 })

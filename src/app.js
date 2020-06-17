@@ -11,8 +11,6 @@ import Routes from './routes'
 import history from '~/utils/history'
 import { store, persistor } from '~/redux'
 
-import './mock/user'
-
 export default function App() {
   axios.post('/posts').then(res => {
     console.log(res.data)
