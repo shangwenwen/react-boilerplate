@@ -1,14 +1,13 @@
 import React from 'react'
 import { Route } from 'react-router-dom'
 
-import { store } from '../redux/index'
-
 import AuthLayout from '../layouts/authLayout'
 import DefaultLayout from '../layouts/defaultLayout'
 
 export default function RouteWrapper({ component: Component, ...rest }) {
-  const { status } = store.getState().account
-  const Layout = status ? AuthLayout : DefaultLayout
+  // const isLogin = localStorage.getItem('user')
+  const isLogin = true
+  const Layout = isLogin ? AuthLayout : DefaultLayout
 
   return (
     <Route

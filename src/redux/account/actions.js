@@ -5,7 +5,3 @@ export function query(payload) {
     payload
   }
 }
-
-// export function login(data) {
-//   return { type: '@login/save', payload: data }
-// }

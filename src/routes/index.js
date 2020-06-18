@@ -3,8 +3,7 @@ import { Switch } from 'react-router-dom'
 import Route from './route'
 // pages
 import Dashboard from '../pages/dashboard'
-import Login from '~/pages/user/login'
-import Register from '~/pages/user/register'
+import Login from '~/pages/login'
 import NoMatch from '~/pages/404'
 
 export default function Routes() {
@@ -12,7 +11,6 @@ export default function Routes() {
     <Switch>
       <Route path='/' exact component={Dashboard} />
       <Route path='/login' exact component={Login} />
-      <Route path='/register' exact component={Register} />
       <Route component={NoMatch} />
     </Switch>
   )
