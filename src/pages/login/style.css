@@ -1,0 +1,55 @@
+body {
+  background-image: url(https://gw.alipayobjects.com/zos/rmsportal/TVYTbAXWheQpRcWDaDMu.svg);
+  background-repeat: no-repeat;
+  background-position: center 110px;
+  background-size: 100%;
+  background-color: #f0f2f5;
+}
+.form-wrapper {
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: center;
+
+  width: 368px;
+  height: 100vh;
+  margin: 0 auto;
+
+  .form-header {
+    width: 100%;
+    height: 56px;
+    line-height: 56px;
+    font-size: 16px;
+    span {
+      float: right;
+      font-size: 12px;
+    }
+  }
+  .form-content {
+    width: 100%;
+  }
+}
+
+.ant-btn-dangerous.ant-btn-primary-disabled,
+.ant-btn-dangerous.ant-btn-primary.disabled,
+.ant-btn-dangerous.ant-btn-primary[disabled],
+.ant-btn-dangerous.ant-btn-primary-disabled:hover,
+.ant-btn-dangerous.ant-btn-primary.disabled:hover,
+.ant-btn-dangerous.ant-btn-primary[disabled]:hover,
+.ant-btn-dangerous.ant-btn-primary-disabled:focus,
+.ant-btn-dangerous.ant-btn-primary.disabled:focus,
+.ant-btn-dangerous.ant-btn-primary[disabled]:focus,
+.ant-btn-dangerous.ant-btn-primary-disabled:active,
+.ant-btn-dangerous.ant-btn-primary.disabled:active,
+.ant-btn-dangerous.ant-btn-primary[disabled]:active,
+.ant-btn-dangerous.ant-btn-primary-disabled.active,
+.ant-btn-dangerous.ant-btn-primary.disabled.active,
+.ant-btn-dangerous.ant-btn-primary[disabled].active {
+  color: rgba(255, 255, 255, 0.75);
+  background: #ff4d4f;
+  border-color: #ff4d4f;
+  text-shadow: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}

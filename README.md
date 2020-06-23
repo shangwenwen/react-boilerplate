@@ -62,7 +62,9 @@ yarn add antd antd-mobile
 state
 {
   account:{
-    username:'shang'
+    currentAuthority: "admin",
+    status: "ok",
+    type: "account",
   }
 }
 ```

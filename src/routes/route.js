@@ -1,13 +1,21 @@
 import React from 'react'
-import { Route } from 'react-router-dom'
+import { Route, Redirect } from 'react-router-dom'
 
-import AuthLayout from '../layouts/authLayout'
+import AdminLayout from '../layouts/adminLayout'
 import DefaultLayout from '../layouts/defaultLayout'
 
-export default function RouteWrapper({ component: Component, ...rest }) {
+export default function RouteWrapper({ component: Component, isPrivate, ...rest }) {
   // const isLogin = localStorage.getItem('user')
-  const isLogin = true
-  const Layout = isLogin ? AuthLayout : DefaultLayout
+  const isLogin = false
+  const Layout = isLogin ? AdminLayout : DefaultLayout
+
+  if (!isLogin && isPrivate) {
+    return <Redirect to='/login' />
+  }
+
+  if (isLogin && !isPrivate) {
+    return <Redirect to='/user' />
+  }
 
   return (
     <Route

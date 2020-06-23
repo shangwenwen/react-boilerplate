@@ -11,7 +11,8 @@ const config = {
   entry: './src/index.js',
   output: {
     filename: './js/[name].js',
-    path: path.resolve(__dirname, './dist')
+    path: path.resolve(__dirname, './dist'),
+    publicPath: '/'
   },
   resolve: {
     // 配置文件路径别名
@@ -79,16 +80,16 @@ const config = {
     }),
     new htmlWebpackPlugin({
       template: path.join(__dirname, './src/index.html'),
-      filename: 'index.html'
-      // minify: {
-      //   collapseWhitespace: true, // 关闭空格
-      //   removeComments: true, // 移除注释
-      //   removeRedundantAttributes: true,
-      //   removeScriptTypeAttributes: true,
-      //   removeStyleLinkTypeAttributes: true,
-      //   useShortDoctype: true,
-      //   removeAttributeQuotes: false // 移除属性双引号
-      // }
+      filename: 'index.html',
+      minify: {
+        collapseWhitespace: true, // 关闭空格
+        removeComments: true, // 移除注释
+        removeRedundantAttributes: true,
+        removeScriptTypeAttributes: true,
+        removeStyleLinkTypeAttributes: true,
+        useShortDoctype: true,
+        removeAttributeQuotes: false // 移除属性双引号
+      }
     })
   ],
   optimization: {
@@ -116,9 +117,14 @@ const config = {
   devServer: {
     contentBase: './dist',
     host: 'localhost',
-    port: 4000,
+    port: 8000,
     inline: true, //缺少该配置，会出现上面的错误
-    historyApiFallback: true //缺少该配置，会出现上面的错误
+    historyApiFallback: true, //缺少该配置，会出现上面的错误
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3000'
+      }
+    }
   },
   stats: 'minimal'
 }

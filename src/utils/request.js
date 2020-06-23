@@ -2,7 +2,7 @@ import axios from 'axios'
 
 // 路由拦截
 const request = axios.create({
-  baseURL: 'http://localhost:3000',
+  baseURL: '',
   withCredentials: true,
   timeout: 60000
 })

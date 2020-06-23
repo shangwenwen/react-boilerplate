@@ -1,7 +1,7 @@
 import { all } from 'redux-saga/effects'
 
-import user from '~/redux/auth/sagas'
+import account from '~/redux/account/sagas'
 
 export default function* rootSaga() {
-  return yield all([user])
+  return yield all([account])
 }
