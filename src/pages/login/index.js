@@ -14,7 +14,7 @@ export default function Login() {
   const [username, setUsername] = useState(null)
 
   const onFinish = values => {
-    console.log('Received values of form: ', values)
+    // console.log('Received values of form: ', values)
   }
 
   function changeUsername(e) {
