@@ -7,4 +7,4 @@ export const login = async (username, password) => request.post('/login', { user
 export const register = async () => request('/register')
 
 // 获取验证码
-export const getCode = async data => request.post('/api/getSms', data)
+export const code = async data => request.post('/api/getSms', data)

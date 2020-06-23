@@ -1,16 +1,18 @@
-import { take, put, call, fork, race, cancelled, delay } from 'redux-saga/effects'
+import { take, put, call, race, cancelled } from 'redux-saga/effects'
 import { eventChannel, END } from 'redux-saga'
-import { getCode } from '~/services/user'
 import { message } from 'antd'
 
-import { codeQuery, codeQueryFailure, countdownStart, countdownCancel } from './actions'
+import Service from '../../services'
+import { codeQueryFailure, countdownStart, countdownCancel } from './actions'
 
+// 验证码倒计时轮询
 export const countdown = secs => {
   return eventChannel(listener => {
     const timer = setInterval(() => {
       secs -= 1
-      if (secs > 0) listener(secs)
-      else {
+      if (secs > 0) {
+        listener(secs)
+      } else {
         listener(END)
         clearInterval(timer)
       }
@@ -21,15 +23,16 @@ export const countdown = secs => {
   })
 }
 
+// 获取验证码
 export function* codeAsync({ payload }) {
-  // yield delay(2000)
-  const { data } = yield call(getCode, { username: payload.username })
+  // 后台获取验证码
+  const { data } = yield call(Service.user.code, { username: payload.username })
 
   if (data.resCode === 0) {
     message.success(data.message, 2)
 
     const chan = yield call(countdown, payload.time)
-    yield put(countdownStart({ countdown: 10, buttonDisabled: true }))
+    yield put(countdownStart({ countdown: payload.time, buttonDisabled: true }))
 
     try {
       while (true) {
@@ -43,21 +46,20 @@ export function* codeAsync({ payload }) {
       chan.close()
     }
   } else {
+    // 获取验证码失败
     message.warning(data.message, 2)
     yield put(codeQueryFailure())
   }
 }
 
+// 监听账号sagas
 export default function* watchAccountAsync() {
   try {
     while (true) {
       const action = yield take('CODE_QUERY')
 
-      // starts a 'Race' between an async increment and a user cancel action
-      // if user cancel action wins, the incrementAsync will be cancelled automatically
       yield race([call(codeAsync, action), take('COUNTDOWN_CANCEL')])
     }
   } finally {
-    console.log('watchIncrementAsync terminated')
   }
 }

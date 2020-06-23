@@ -6,16 +6,16 @@ export function codeQuery(payload) {
   }
 }
 
+export function codeQueryFailure() {
+  return {
+    type: 'CODE_QUERY_FAILURE'
+  }
+}
+
 export function countdownStart(payload) {
   return {
     type: 'COUNTDOWN_START',
     payload
-  }
-}
-
-export function countdownReset() {
-  return {
-    type: 'COUNTDOWN_RESET'
   }
 }
 
@@ -25,14 +25,8 @@ export function countdownCancel() {
   }
 }
 
-export function countdownTerminated() {
+export function countdownReset() {
   return {
-    type: 'COUNTDOWN_TERMINATED'
-  }
-}
-
-export function codeQueryFailure() {
-  return {
-    type: 'CODE_QUERY_FAILURE'
+    type: 'COUNTDOWN_RESET'
   }
 }
