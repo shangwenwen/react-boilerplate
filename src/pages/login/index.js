@@ -61,7 +61,7 @@ export default function Login() {
                 <Input size='large' prefix={<LockOutlined />} placeholder='code' />
               </Col>
               <Col span={9}>
-                <Code username={username} />
+                <Code username={username} time={10} />
               </Col>
             </Row>
           </Form.Item>

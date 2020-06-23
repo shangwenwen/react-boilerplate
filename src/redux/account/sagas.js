@@ -1,19 +1,17 @@
-import { all, call, put, take, takeLatest } from 'redux-saga/effects'
+import { take, put, call, fork, race, cancelled, delay } from 'redux-saga/effects'
 import { eventChannel, END } from 'redux-saga'
 import { getCode } from '~/services/user'
 import { message } from 'antd'
 
-import { sendCodeCountdown, sendCodeFailure, sendCodeStart } from './actions'
+import { codeQuery, codeQueryFailure, countdownStart, countdownCancel } from './actions'
 
-// 倒计时
 export const countdown = secs => {
-  return eventChannel(emitter => {
+  return eventChannel(listener => {
     const timer = setInterval(() => {
       secs -= 1
-      if (secs > 0) {
-        emitter(secs)
-      } else {
-        emitter(END)
+      if (secs > 0) listener(secs)
+      else {
+        listener(END)
         clearInterval(timer)
       }
     }, 1000)
@@ -23,33 +21,43 @@ export const countdown = secs => {
   })
 }
 
-// 发送验证码
-export function* sendCodeAsync({ payload }) {
-  // 模拟延时请求
-  // yield delay(1000)
-  // 请求数据
-  const { data } = yield call(getCode, payload)
+export function* codeAsync({ payload }) {
+  // yield delay(2000)
+  const { data } = yield call(getCode, { username: payload.username })
 
   if (data.resCode === 0) {
     message.success(data.message, 2)
 
-    const secs = 60
-    const timeChannel = yield call(countdown, secs)
+    const chan = yield call(countdown, payload.time)
+    yield put(countdownStart({ countdown: 10, buttonDisabled: true }))
 
     try {
       while (true) {
-        let seconds = yield take(timeChannel)
-        yield put(sendCodeCountdown({ countdown: `${seconds}s`, buttonDisabled: true }))
+        let seconds = yield take(chan)
+        yield put(countdownStart({ countdown: seconds, buttonDisabled: true }))
       }
     } finally {
-      console.log('ss')
-
-      yield put(sendCodeStart())
+      if (!(yield cancelled())) {
+        yield put(countdownCancel())
+      }
+      chan.close()
     }
   } else {
-    message.warning(data.message)
-    yield put(sendCodeFailure())
+    message.warning(data.message, 2)
+    yield put(codeQueryFailure())
   }
 }
 
-export default all([takeLatest('@account/sendCode', sendCodeAsync)])
+export default function* watchAccountAsync() {
+  try {
+    while (true) {
+      const action = yield take('CODE_QUERY')
+
+      // starts a 'Race' between an async increment and a user cancel action
+      // if user cancel action wins, the incrementAsync will be cancelled automatically
+      yield race([call(codeAsync, action), take('COUNTDOWN_CANCEL')])
+    }
+  } finally {
+    console.log('watchIncrementAsync terminated')
+  }
+}

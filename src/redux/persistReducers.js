@@ -6,7 +6,7 @@ export default reducers => {
     {
       key: 'persist-name',
       storage,
-      blacklist: ['account']
+      whitelist: ['account']
     },
     reducers
   )

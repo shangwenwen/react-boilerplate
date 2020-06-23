@@ -1,25 +1,38 @@
-// 发起登录请求
-export function sendCode(payload) {
+// 获取验证码
+export function codeQuery(payload) {
   return {
-    type: '@account/sendCode',
+    type: 'CODE_QUERY',
     payload
   }
 }
 
-export function sendCodeCountdown(payload) {
+export function countdownStart(payload) {
   return {
-    type: '@account/sendCodeCountdown',
+    type: 'COUNTDOWN_START',
     payload
   }
 }
 
-export function sendCodeStart() {
+export function countdownReset() {
   return {
-    type: '@account/sendCodeStart'
+    type: 'COUNTDOWN_RESET'
   }
 }
-export function sendCodeFailure() {
+
+export function countdownCancel() {
   return {
-    type: '@account/sendCodeFailure'
+    type: 'COUNTDOWN_CANCEL'
+  }
+}
+
+export function countdownTerminated() {
+  return {
+    type: 'COUNTDOWN_TERMINATED'
+  }
+}
+
+export function codeQueryFailure() {
+  return {
+    type: 'CODE_QUERY_FAILURE'
   }
 }
