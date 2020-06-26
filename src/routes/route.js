@@ -1,19 +1,21 @@
 import React from 'react'
+import { useSelector } from 'react-redux'
 import { Route, Redirect } from 'react-router-dom'
 
 import AdminLayout from '../layouts/adminLayout'
 import DefaultLayout from '../layouts/defaultLayout'
 
 export default function RouteWrapper({ component: Component, isPrivate, ...rest }) {
-  // const isLogin = localStorage.getItem('user')
-  const isLogin = false
-  const Layout = isLogin ? AdminLayout : DefaultLayout
+  const { username } = useSelector(state => state.account)
 
-  if (!isLogin && isPrivate) {
+  // const username = false
+  const Layout = username ? AdminLayout : DefaultLayout
+
+  if (!username && isPrivate) {
     return <Redirect to='/login' />
   }
 
-  if (isLogin && !isPrivate) {
+  if (username && !isPrivate) {
     return <Redirect to='/user' />
   }
 

@@ -6,13 +6,14 @@ import { codeQuery, countdownCancel, countdownReset } from '../../redux/account/
 
 export default function Code(props) {
   const dispatch = useDispatch()
-  const { codeButtonLoading, codeButtonText, codeButtonDisabled } = useSelector(state => state.account)
+  const { loading, buttonText, disabled } = useSelector(state => state.code)
 
-  const { username, time } = props
+  const { username, time, module } = props
 
   useEffect(() => {
     // 页面加载重制验证码倒计时
     dispatch(countdownReset())
+
     return () => {
       // 页面离开取消倒计时
       dispatch(countdownCancel())
@@ -25,11 +26,11 @@ export default function Code(props) {
       return false
     }
 
-    dispatch(codeQuery({ username, time }))
+    dispatch(codeQuery({ username, time, module }))
   }
   return (
-    <Button onClick={handleQueryCode} loading={codeButtonLoading} disabled={codeButtonDisabled} type='primary' size='large' danger block>
-      {codeButtonText}
+    <Button onClick={handleQueryCode} loading={loading} disabled={disabled} type='primary' size='large' danger block>
+      {buttonText}
     </Button>
   )
 }

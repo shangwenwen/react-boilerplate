@@ -16,13 +16,23 @@ export default {
 
   // 获取验证码
   'POST /api/getSms': ctx => {
-    const { username } = ctx.request.body
+    const { username, module } = ctx.request.body
 
-    if (username === 'admin@admin.com') {
+    if (username === 'admin@qq.com' && module === 'login') {
       ctx.body = {
         resCode: 0,
         data: null,
-        message: '验证码是：123456'
+        message: '登录验证码是：111111'
+      }
+
+      return
+    }
+
+    if (username === 'admins@qq.com' && module === 'register') {
+      ctx.body = {
+        resCode: 0,
+        data: null,
+        message: '注册验证码是：555555'
       }
 
       return
@@ -38,21 +48,41 @@ export default {
   'POST /api/login': ctx => {
     const { username, password, code } = ctx.request.body
 
-    if (username === 'admin' && password === 'admin' && code === '123456') {
+    if (username === 'admin@qq.com' && password === 'a11111' && code === '111111') {
       ctx.body = {
         resCode: 0,
         data: {
-          code: 1234
+          username: 'admin',
+          token: 'ddkahajkdlfal8lgdjal22ejggadgl7gaad'
         },
-        message: 'OK'
+        message: '登录成功！'
       }
 
       return
     }
 
     ctx.body = {
-      status: 1,
-      msg: '用户名或密码不正确!'
+      resCode: 1,
+      message: '登录失败，请重新登录!'
+    }
+  },
+  // 注册
+  'POST /api/register': ctx => {
+    const { username, password, code } = ctx.request.body
+
+    if (username !== 'admin@qq.com' && code === '555555') {
+      ctx.body = {
+        resCode: 0,
+        data: null,
+        message: '注册成功'
+      }
+
+      return
+    }
+
+    ctx.body = {
+      resCode: 1,
+      message: '用户名已存在，请重新输入！'
     }
   }
 }

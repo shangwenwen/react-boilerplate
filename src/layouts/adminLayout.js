@@ -1,5 +1,5 @@
 import React from 'react'
-import { Layout, Menu } from 'antd'
+import { Layout, Menu, Button } from 'antd'
 import { UserOutlined, VideoCameraOutlined, UploadOutlined } from '@ant-design/icons'
 
 import './style.css'
@@ -24,7 +24,9 @@ export default function DefaultLayout({ children }) {
         </Menu>
       </Sider>
       <Layout className='site-layout'>
-        <Header className='site-layout-background' style={{ padding: 0 }}></Header>
+        <Header className='site-layout-background' style={{ padding: 0 }}>
+          <Button>logout</Button>
+        </Header>
         <Content
           className='site-layout-background'
           style={{

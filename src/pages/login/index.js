@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
 
 import { Form, Input, Button, Row, Col } from 'antd'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
@@ -7,14 +8,21 @@ import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import { validatePassword } from '../../utils/validate'
 
 import Code from '../../components/code'
+import logoImg from '../../assets/img/logo.svg'
+
+import { login } from '../../redux/account/actions'
 
 import './style.css'
 
-export default function Login() {
+export default function Login(props) {
+  const dispatch = useDispatch()
   const [username, setUsername] = useState(null)
+  const module = props.match.path.slice(1)
 
   const onFinish = values => {
-    // console.log('Received values of form: ', values)
+    console.log(values)
+
+    dispatch(login(values))
   }
 
   function changeUsername(e) {
@@ -23,9 +31,12 @@ export default function Login() {
 
   return (
     <div className='form-wrapper'>
-      <div>shang</div>
+      <div style={{ textAlign: 'center', paddingBottom: '40px' }}>
+        <img src={logoImg} className='logo' alt='logo' />
+        <span className='logo-text'>React Back</span>
+      </div>
       <div className='form-header'>
-        登录
+        用户登录
         <span>
           <Link to='/register'>注册新用户</Link>
         </span>
@@ -38,7 +49,7 @@ export default function Login() {
               { required: true, message: '用户名不能为空' },
               { type: 'email', message: 'email格式不正确' }
             ]}>
-            <Input onChange={changeUsername} size='large' prefix={<UserOutlined />} placeholder='email' />
+            <Input onChange={changeUsername} size='large' prefix={<UserOutlined />} placeholder='用户名' />
           </Form.Item>
           <Form.Item
             name='password'
@@ -48,7 +59,7 @@ export default function Login() {
               // { min: 6, message: '最少6位' },
               // { max: 20, message: '最多20位' }
             ]}>
-            <Input.Password size='large' prefix={<LockOutlined />} placeholder='Password' />
+            <Input.Password size='large' prefix={<LockOutlined />} placeholder='请收入密码' />
           </Form.Item>
           <Form.Item
             name='code'
@@ -58,10 +69,10 @@ export default function Login() {
             ]}>
             <Row justify='space-between' gutter={14}>
               <Col span={15}>
-                <Input size='large' prefix={<LockOutlined />} placeholder='code' />
+                <Input size='large' prefix={<LockOutlined />} placeholder='验证码' />
               </Col>
               <Col span={9}>
-                <Code username={username} time={5} />
+                <Code username={username} time={5} module={module} />
               </Col>
             </Row>
           </Form.Item>

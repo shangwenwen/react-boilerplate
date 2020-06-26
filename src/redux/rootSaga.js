@@ -1,7 +1,7 @@
-import { fork } from 'redux-saga/effects'
+import { all } from 'redux-saga/effects'
 
-import watchAccountAsync from '~/redux/account/sagas'
+import account from '~/redux/account/sagas'
 
 export default function* rootSaga() {
-  return yield fork(watchAccountAsync)
+  yield all([account])
 }

@@ -56,10 +56,15 @@ const config = {
       },
       {
         enforce: 'pre',
-        test: /\.(js|jsx)$/,
-        loader: 'eslint-loader',
-        options: {
-          fix: true
+        test: /.(js|jsx)$/,
+        exclude: [path.resolve(__dirname, 'node_modules')],
+        use: {
+          loader: 'eslint-loader',
+          options: {
+            fix: true,
+            emitError: true,
+            formatter: 'stylish'
+          }
         }
       },
       {
