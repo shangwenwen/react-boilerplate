@@ -63,7 +63,7 @@ const config = {
           options: {
             fix: true,
             emitError: true,
-            formatter: 'stylish'
+            formatter: require('eslint-friendly-formatter')
           }
         }
       },

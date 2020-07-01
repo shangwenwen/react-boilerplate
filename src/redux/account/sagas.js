@@ -1,4 +1,4 @@
-import { take, put, call, race, cancelled, all, takeLatest, fork } from 'redux-saga/effects'
+import { take, put, call, cancelled, all, takeLatest, race, fork } from 'redux-saga/effects'
 import { eventChannel, END } from 'redux-saga'
 import { message } from 'antd'
 
@@ -6,8 +6,8 @@ import Service from '../../services'
 import history from '../../utils/history'
 import { codeQueryFailure, countdownStart, countdownCancel, loginSuccess, logoutSuccess } from './actions'
 
-// 验证码倒计时轮询
-export const countdown = secs => {
+// 定时器
+export const interval = secs => {
   return eventChannel(listener => {
     const timer = setInterval(() => {
       secs -= 1
@@ -24,52 +24,63 @@ export const countdown = secs => {
   })
 }
 
-// 获取验证码
-export function* codeAsync({ payload }) {
-  // 后台获取验证码
-  const { data } = yield call(Service.user.code, { username: payload.username, module: payload.module })
+// 倒计时
+export function* countdown({ payload }) {
+  const chan = yield call(interval, payload)
+  yield put(countdownStart({ countdown: `倒计时${payload}秒`, buttonDisabled: true }))
 
-  if (data.resCode === 0) {
-    message.success(data.message, 2)
-
-    const chan = yield call(countdown, payload.time)
-    yield put(countdownStart({ countdown: `倒计时${payload.time}秒`, buttonDisabled: true }))
-
-    try {
-      while (true) {
-        let seconds = yield take(chan)
-        yield put(countdownStart({ countdown: `倒计时${seconds}秒`, buttonDisabled: true }))
-      }
-    } finally {
-      if (!(yield cancelled())) {
-        yield put(countdownCancel())
-      }
-      chan.close()
+  try {
+    while (true) {
+      let seconds = yield take(chan)
+      yield put(countdownStart({ countdown: `倒计时${seconds}秒`, buttonDisabled: true }))
     }
-  } else {
-    // 获取验证码失败
-    message.warning(data.message, 2)
-    yield put(codeQueryFailure())
+  } finally {
+    if (!(yield cancelled())) {
+      yield put(countdownCancel())
+    }
+    chan.close()
   }
 }
 
-// 监听账号sagas
-export function* watchAccountAsync() {
+// 监听倒计时
+export function* watchCountdownSaga() {
   try {
     while (true) {
-      const action = yield take('CODE_QUERY')
-
-      yield race([call(codeAsync, action), take('COUNTDOWN_CANCEL')])
+      const action = yield take('COUNTDOWN_START')
+      yield race([call(countdown, action), take('COUNTDOWN_CANCEL')])
     }
   } finally {
-    console.log('code finally')
+    console.log('countdown finally')
+  }
+}
+
+// 监听获取验证码
+export function* watchCodeAsync({ payload }) {
+  // 后台获取验证码
+  const { data } = yield call(Service.user.code, {
+    username: payload.username,
+    module: payload.module
+  })
+
+  if (data.resCode === 0) {
+    // 获取验证码成功
+    message.success(data.message)
+    // 触发验证码倒计时
+    yield put(countdownStart(payload.time))
+  } else {
+    // 获取验证码失败
+    message.warning(data.message)
+    yield put(codeQueryFailure())
   }
 }
 
 // 注册
 export function* registerAsync({ payload }) {
-  console.log(payload)
-  const { data } = yield call(Service.user.register, { username: payload.data.username, password: payload.data.password, code: payload.data.code })
+  const { data } = yield call(Service.user.register, {
+    username: payload.data.username,
+    password: payload.data.password,
+    code: payload.data.code
+  })
 
   if (data.resCode === 0) {
     message.success(data.message)
@@ -84,24 +95,40 @@ export function* registerAsync({ payload }) {
 
 // 登录
 export function* loginAsync({ payload }) {
-  const { data } = yield call(Service.user.login, { username: payload.username, password: payload.password, code: payload.code })
-  console.log(data)
-
+  const { data } = yield call(Service.user.login, {
+    username: payload.username,
+    password: payload.password,
+    code: payload.code
+  })
+  // 登录成功
   if (data.resCode === 0) {
+    // 提示登录成功信息
+    message.success(data.msg)
     yield put(loginSuccess(data.data))
-    message.success(data.message)
-
+    // 保存 TOKEN
+    localStorage.setItem('token', data.data.token)
     // 跳转到首页
-    history.push('/')
+    history.push('/manage/dashboard')
   } else {
-    message.warning(data.message)
+    // 登录失败 提示错误信息
+    message.warning(data.msg)
   }
 }
 
 // 退出登录
 export function* logoutAsync() {
+  // 清除 STATE
   yield put(logoutSuccess())
+  // 清除 TOKEN
+  localStorage.removeItem('token')
+  // 跳转到登录页面
   history.push('/login')
 }
 
-export default all([takeLatest('REGISTER', registerAsync), takeLatest('LOGIN', loginAsync), takeLatest('LOGOUT', logoutAsync), fork(watchAccountAsync)])
+export default all([
+  takeLatest('REGISTER', registerAsync),
+  takeLatest('LOGIN', loginAsync),
+  takeLatest('LOGOUT', logoutAsync),
+  takeLatest('CODE_QUERY', watchCodeAsync),
+  fork(watchCountdownSaga)
+])

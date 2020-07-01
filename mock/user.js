@@ -52,18 +52,25 @@ export default {
       ctx.body = {
         resCode: 0,
         data: {
+          _id: '5c3b297dea95883f340178b0',
+          token: 'ddkahajkdlfal8lgdjal22ejggadgl7gaad',
+          password: '21232f297a57a5a743894a0e4a801fc3',
           username: 'admin',
-          token: 'ddkahajkdlfal8lgdjal22ejggadgl7gaad'
+          create_time: 1547381117891,
+          __v: 0,
+          role: {
+            menus: []
+          }
         },
-        message: '登录成功！'
+        msg: '登录成功！'
       }
 
       return
     }
 
     ctx.body = {
-      resCode: 1,
-      message: '登录失败，请重新登录!'
+      status: 1,
+      msg: '用户名或密码不正确!'
     }
   },
   // 注册

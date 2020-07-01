@@ -21,11 +21,6 @@ export function countdownCancel() {
     type: 'COUNTDOWN_CANCEL'
   }
 }
-export function countdownReset() {
-  return {
-    type: 'COUNTDOWN_RESET'
-  }
-}
 
 // 登录
 export function login(payload) {

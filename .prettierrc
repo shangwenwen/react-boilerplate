@@ -3,6 +3,6 @@
   "semi": false,
   "singleQuote": true,
   "eslintIntegration": false,
-  "printWidth": 200,
+  "printWidth": 150,
   "jsxBracketSameLine": true
 }

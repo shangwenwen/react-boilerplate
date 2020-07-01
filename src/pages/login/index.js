@@ -1,27 +1,27 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
-
+// antd
 import { Form, Input, Button, Row, Col } from 'antd'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
-
+// 表单验证
 import { validatePassword } from '../../utils/validate'
-
+// 验证码组件
 import Code from '../../components/code'
-import logoImg from '../../assets/img/logo.svg'
-
+// action
 import { login } from '../../redux/account/actions'
 
+// 导入图片&样式
+import logoImg from '../../assets/img/logo.svg'
 import './style.css'
 
 export default function Login(props) {
   const dispatch = useDispatch()
   const [username, setUsername] = useState(null)
-  const module = props.match.path.slice(1)
+  // 获取发起验证码module
+  const codeModule = props.match.path.slice(1)
 
   const onFinish = values => {
-    console.log(values)
-
+    // 点击登录
     dispatch(login(values))
   }
 
@@ -35,12 +35,7 @@ export default function Login(props) {
         <img src={logoImg} className='logo' alt='logo' />
         <span className='logo-text'>React Back</span>
       </div>
-      <div className='form-header'>
-        用户登录
-        <span>
-          <Link to='/register'>注册新用户</Link>
-        </span>
-      </div>
+      <div className='form-header'>用户登录</div>
       <div className='form-content'>
         <Form name='normal_login' initialValues={{ remember: true }} onFinish={onFinish}>
           <Form.Item
@@ -55,9 +50,15 @@ export default function Login(props) {
             name='password'
             rules={[
               { required: true, message: '密码不能为空' },
-              { pattern: validatePassword, message: '请输入数字或字母，不小于6位大于20位' }
-              // { min: 6, message: '最少6位' },
-              // { max: 20, message: '最多20位' }
+              ({ getFieldValue }) => ({
+                validator(rule, value) {
+                  if (!validatePassword(value)) {
+                    return Promise.reject('密码格式不正确')
+                  }
+
+                  return Promise.resolve()
+                }
+              })
             ]}>
             <Input.Password size='large' prefix={<LockOutlined />} placeholder='请收入密码' />
           </Form.Item>
@@ -72,7 +73,7 @@ export default function Login(props) {
                 <Input size='large' prefix={<LockOutlined />} placeholder='验证码' />
               </Col>
               <Col span={9}>
-                <Code username={username} time={5} module={module} />
+                <Code username={username} time={5} module={codeModule} />
               </Col>
             </Row>
           </Form.Item>

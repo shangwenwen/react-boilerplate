@@ -40,12 +40,6 @@ export function code(state = initCode, action) {
         draft.disabled = true
         break
       }
-      case 'COUNTDOWN_RESET': {
-        draft.loading = false
-        draft.buttonText = '获取验证码'
-        draft.disabled = false
-        break
-      }
       case 'COUNTDOWN_START': {
         draft.loading = false
         draft.buttonText = action.payload.countdown
